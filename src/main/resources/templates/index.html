@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1">-->
     <link th:href="@{'/css/mycss.css'}" rel="stylesheet"/>
     <link th:href="@{'/css/bootstrap.min.css'}" rel="stylesheet"/>
     <title>Index</title>
@@ -28,35 +28,35 @@
             <div class="container-fluet" style="width: 1211px;">
                 <div class="row">
                     <!-- Menu -->
-<!--                    <div class="col-md-3" style="padding-right: 0px;">-->
+                    <!--                    <div class="col-md-3" style="padding-right: 0px;">-->
                     <div class="col-md-3" style="padding-right: 0px;">
-<!--<div id="navwh">-->
-<!--                        <a class="navbar-brand" style="padding-left: 18px;" href="#">Console</a>-->
-<!--                        <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse"-->
-<!--                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true"-->
-<!--                                aria-label="Toggle navigation" style="-->
-<!--    border-top-width: 0px;-->
-<!--    border-right-width: 0px;-->
-<!--    border-bottom-width: 0px;-->
-<!--    border-left-width: 0px;-->
-<!--    width: 40px;-->
-<!--    height: 35px;-->
-<!--    padding-left: 0px;-->
-<!--    padding-top: 0px;-->
-<!--    padding-bottom: 2px;-->
-<!--    padding-right: 0px;-->
-<!--    margin-bottom: 2px;-->
-<!--">-->
-<!--                            <img src="../img/hum1.png" style="width: 30px;-->
-<!--    height: 30px;"></button>-->
-<!--                        <div class="navbar-collapse collapse show" id="navbarSupportedContent" style="">-->
-<!--                            <ul class="navbar-nav mr-auto" th:each="platfom: ${platforms}">-->
-<!--                                <li><a th:href="@{'/platform/' + ${platfom.id}}" class="list-group-item list-group-item-action"-->
-<!--                                       th:text="${platfom.name}">Sega Master-->
-<!--                                    System</a></li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--</div>-->
+                        <!--<div id="navwh">-->
+                        <!--                        <a class="navbar-brand" style="padding-left: 18px;" href="#">Console</a>-->
+                        <!--                        <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse"-->
+                        <!--                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true"-->
+                        <!--                                aria-label="Toggle navigation" style="-->
+                        <!--    border-top-width: 0px;-->
+                        <!--    border-right-width: 0px;-->
+                        <!--    border-bottom-width: 0px;-->
+                        <!--    border-left-width: 0px;-->
+                        <!--    width: 40px;-->
+                        <!--    height: 35px;-->
+                        <!--    padding-left: 0px;-->
+                        <!--    padding-top: 0px;-->
+                        <!--    padding-bottom: 2px;-->
+                        <!--    padding-right: 0px;-->
+                        <!--    margin-bottom: 2px;-->
+                        <!--">-->
+                        <!--                            <img src="../img/hum1.png" style="width: 30px;-->
+                        <!--    height: 30px;"></button>-->
+                        <!--                        <div class="navbar-collapse collapse show" id="navbarSupportedContent" style="">-->
+                        <!--                            <ul class="navbar-nav mr-auto" th:each="platfom: ${platforms}">-->
+                        <!--                                <li><a th:href="@{'/platform/' + ${platfom.id}}" class="list-group-item list-group-item-action"-->
+                        <!--                                       th:text="${platfom.name}">Sega Master-->
+                        <!--                                    System</a></li>-->
+                        <!--                            </ul>-->
+                        <!--                        </div>-->
+                        <!--</div>-->
                         <div th:replace="fragments/menuth :: menu"></div>
 
 
@@ -64,15 +64,28 @@
 
                     <div class="col-md-9" style="padding-left: 0px;">
 
+                        <div th:if="${ok!=null&&ok}">
+                            <div class="form-group col-md-12" style=" text-align: center">
+
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="
+    margin-top: 10px;">
+                                    Игра удалена
+                                    <button type=" button
+                                " class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Carousel -->
                         <div id="carouselExampleInterval" class="carousel slide"
                              data-ride="carousel">
                             <div class="carousel-inner">
-                                <div class="carousel-item active" data-interval="10000">
+                                <div class="carousel-item active" data-interval="30000">
                                     <img src="img/1k.png" class="d-block w-100" alt="...">
                                 </div>
-                                <div class="carousel-item" data-interval="2000">
+                                <div class="carousel-item" data-interval="30000">
                                     <img src="img/2k.jpg" class="d-block w-100" alt="...">
                                 </div>
                             </div>
@@ -103,27 +116,7 @@
                                             <!--                                        <img src="img/card1.jpg " class="card-img-top">-->
                                             <div class="card-body">
                                                 <form method="post" th:action="@{'/testDB/'+${info.id}}">
-                                                    <!--                                            <h5 class="card-title " th:text="${info.id}">Battletoads</h5>-->
                                                     <h5 class="card-title " th:text="${info.title}">Battletoads</h5>
-
-                                                    <!--                                                    <p class="card-text" th:text="${info.description}"></p>-->
-                                                    <!--                                                    ${#strings.toString(obj)}                           // так же array*, list* and set*-->
-
-                                                    <!--                                                    <p class="card-text" th:text="${#strings.toString(${info})}"></p>-->
-                                                    <!--                                                    <block th:with = "test=${info.description}">-->
-
-
-                                                    <!--&lt;!&ndash;                                                    <p class="card-text" th:text="${#strings.substring(test,0,5)}"></p>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;                                                    <p class="card-text" th:text="${#strings.length(test)}"></p>&ndash;&gt;-->
-                                                    <!--                                                    <p class="card-text" th:text="${#strings.length(test)>150}? ${#strings.substring(test,0,160)} :'gruntov'"></p>-->
-                                                    <!--&lt;!&ndash;                                                    <p class="card-text" th:text="${test}"></p>&ndash;&gt;-->
-                                                    <!--                                                    </block>-->
-                                                    <!--                                                    <p class="card-text " th:text="${#strings.substring(info.description,0,160)}"-->
-
-
-                                                    <!--                                                    <p class="card-text" th:text="${#strings.length(test)>150}? ${#strings.substring(test,0,160)} :'gruntov'"></p>-->
-                                                    <!--                                                    -->
-                                                    <!--                                                    <p th:text="${strings.concat('ig','orr')}"></p>-->
 
                                                     <p class="card-text"
                                                        th:text="${#strings.length(info.description)>160}? ${#strings.substring(info.description,0,160)}+'...' :'gruntov'"
@@ -135,17 +128,53 @@
                                                         серии.</p>
                                                     <hr style="margin-top: 5px;margin-bottom: 5px;">
                                                     <div class="row">
-                                                        <!--                                                    <div class="col-md-2"></div>-->
-                                                        <!--                                                    <div class="col-md-4" style="padding-left: 0px; text-align: center;"><b th:text="${info.oneDayPrice}">100р</b></div>-->
+                                                        <div th:if="${!(#httpServletRequest.isUserInRole('ROLE_ADMIN') or #httpServletRequest.isUserInRole('ROLE_USER'))}"
+                                                             class="col-md-12"
+                                                             style="text-align: center;">
+                                                            <b th:text="${info.oneDayPrice}">old</b>
+                                                            <b th:text=" ' р/д'">r/day</b>
+                                                        </div>
 
-                                                        <div class="col-md-7"
-                                                             style="text-align: center;padding-left: 42px;"><b
-                                                                th:text="${info.oneDayPrice+' р/день'}">100р</b></div>
-                                                        <div class="col-md-5">
+                                                        <!--                                                        <div th:if="${(#httpServletRequest.isUserInRole('ROLE_ADMIN') or #httpServletRequest.isUserInRole('ROLE_USER'))}"-->
+                                                        <!--                                                             class="col-md-12"-->
+                                                        <!--                                                             style="text-align: center;">-->
+                                                        <!--                                                            <b th:text="${info.oneDayPrice}"-->
+                                                        <!--                                                               class="idoneday">-->
+                                                        <!--                                                            </b>-->
+                                                        <!--                                                            <s th:text="${info.oneDayPrice}">old</s>-->
+                                                        <!--                                                            <b th:text=" 'р/день'">r/day</b>-->
+                                                        <!--                                                        </div>-->
+
+                                                        <!-- User Admin-->
+
+                                                        <div th:if="${#httpServletRequest.isUserInRole('ROLE_ADMIN') or #httpServletRequest.isUserInRole('ROLE_USER')}"
+                                                             class="col-md-12"
+                                                             style="text-align: center;">
+                                                            <!--                                                            <b th:if="${ user.order_amount>500}" th:text="${info.oneDayPrice*0.9}"></b>-->
+                                                            <!--                                                            <b th:if="${ user.order_amount<500}" th:text="${info.oneDayPrice}"></b>-->
+                                                            <b th:text="${info.oneDayPrice*user.discount_rate}"
+                                                               class="idoneday">
+                                                            </b>
+                                                            <s th:text="${info.oneDayPrice}">old</s>
+                                                            <b th:text=" ' р/д'">r/day</b>
+                                                        </div>
+
+                                                    </div>
+                                                    <div th:if="${#httpServletRequest.isUserInRole('ROLE_ADMIN') or #httpServletRequest.isUserInRole('ROLE_USER')}"
+                                                         class="row">
+                                                        <div class="col-md-12" style="text-align: center">
                                                             <b th:id="${info.id}"
-                                                               th:text="${info.oneDayPrice*3+'р'}"></b>
+                                                               th:text="${#numbers.formatDecimal(info.oneDayPrice*user.discount_rate*3, 1, 'POINT', 2, 'POINT')+' p/итог'}"></b>
                                                         </div>
                                                     </div>
+                                                    <div th:if="${!(#httpServletRequest.isUserInRole('ROLE_ADMIN') or #httpServletRequest.isUserInRole('ROLE_USER'))}"
+                                                         class="row">
+                                                        <div class="col-md-12" style="text-align: center">
+                                                            <b th:id="${info.id}"
+                                                               th:text="${#numbers.formatDecimal(info.oneDayPrice*3, 1, 'POINT', 2, 'POINT')+' p/итог'}"></b>
+                                                        </div>
+                                                    </div>
+
                                                     <hr style="margin-top: 5px;margin-bottom: 5px;">
 
                                                     <div class="container">
@@ -164,7 +193,20 @@
                                                                            name="custId"
                                                                            th:value="${info.oneDayPrice}">
                                                                     <!--                                                                    <input   onchange="incr(this)" type="text"-->
-                                                                    <input onchange="incr(this)" type="text"
+                                                                    <!--                                                                    <input th:if="${#httpServletRequest.isUserInRole('ROLE_ADMIN') or #httpServletRequest.isUserInRole('ROLE_USER')}"-->
+                                                                    <input th:if="${#httpServletRequest.isUserInRole('ROLE_ADMIN') or #httpServletRequest.isUserInRole('ROLE_USER')}"
+                                                                           onchange="incr(this)" type="text"
+                                                                           th:id="${'quant['+info.id+']'}"
+                                                                           th:name="inputplus"
+                                                                           th:accept="${user.discount_rate}"
+                                                                           class="form-control input-number" value="3"
+                                                                           min="1"
+                                                                           max="10" style="text-align: center;"
+                                                                           th:alt="${info.oneDayPrice}"
+                                                                           th:title="${info.id}">
+
+                                                                    <input th:if="${!(#httpServletRequest.isUserInRole('ROLE_ADMIN') or #httpServletRequest.isUserInRole('ROLE_USER'))}"
+                                                                           onchange="incr(this)" type="text"
                                                                            th:id="${'quant['+info.id+']'}"
                                                                            th:name="inputplus"
                                                                            class="form-control input-number" value="3"
@@ -175,12 +217,16 @@
 
                                                                     <script>
                                                                         function incr(e) {
-                                                                            var temp = e.value * e.alt;
+                                                                            if (e.accept.length != 0) {
+                                                                                var temp = e.value * e.alt * e.accept;
+                                                                            } else {
+                                                                                var temp = e.value * e.alt;
+                                                                            }
 
                                                                             if ((temp + "").indexOf(".") > 0) {
-                                                                                document.getElementById(e.title).innerText = temp + 'р';
+                                                                                document.getElementById(e.title).innerText = parseFloat(temp).toFixed(2) + ' p/итог';
                                                                             } else {
-                                                                                document.getElementById(e.title).innerText = temp + '.0р';
+                                                                                document.getElementById(e.title).innerText = parseFloat(temp).toFixed(2) + ' p/итог';
                                                                             }
                                                                         }
 
@@ -231,6 +277,11 @@
 <div th:include="fragments/scriptth :: script"></div>
 
 <script>
+
+    for (let i = 0; i < document.getElementsByClassName("idoneday").length; i++) { // выведет 0, затем 1, затем 2
+        var temp = document.getElementsByClassName("idoneday")[i].textContent;
+        document.getElementsByClassName("idoneday")[i].innerHTML = parseFloat(temp).toFixed(2);
+    }
 
     //plugin bootstrap minus and plus
     //http://jsfiddle.net/laelitenetwork/puJ6G/

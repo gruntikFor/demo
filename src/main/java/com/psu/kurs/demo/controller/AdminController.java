@@ -9,22 +9,34 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.imageio.ImageIO;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
+@EnableTransactionManagement
 @Controller
 public class AdminController {
 
@@ -92,25 +104,31 @@ public class AdminController {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return "addGame";
+        return "/add/addGame";
     }
 
     @GetMapping("/addGenres")
     public String addGenres(Model model) {
         model = menuService.getMenuItems(model); //get menu items
-        return "addGenres";
+        return "/add/addGenres";
     }
 
     @GetMapping("/addplatform")
     public String addPlatform(Model model) {
         model = menuService.getMenuItems(model); //get menu items
-        return "addPlatform";
+        return "/add/addPlatform";
     }
 
+    //переделать
     @GetMapping("/delgame/{id}")
-    public @ResponseBody
-    String delGameId(@PathVariable String id, Model model) {
+    public String delGameId(@PathVariable String id, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) throws MalformedURLException {
 
+        URL url = new URL(request.getHeader("Referer")); //where request is the HttpServletRequest
+        String urlStr = url.getPath();
+
+        if (urlStr.startsWith("/game/")) {
+            urlStr = "/";
+        }
         //если удаляем игру, то и удаляем и requests с этой игрой
         List<Requests> requestsList = requestsRepository.findAll();
         for (Requests req : requestsList) {
@@ -119,13 +137,81 @@ public class AdminController {
                 requestsRepository.deleteById(req.getId());
             }
         }
+        redirectAttributes.addFlashAttribute("ok", true);
 
         productsRepository.deleteById(Long.valueOf(id));
 
-        return "Так-с";
+        return "redirect:" + urlStr;
     }
 
-    //TODO что-то странное
+    @Autowired
+    ServletContext servletContext;
+
+    //если есть игра с таким жанром, то не удаляем жанр
+    @Transactional
+    @GetMapping("/delGenreId/{id}")
+    public String delGenreId(@PathVariable String id, Model model, RedirectAttributes redirectAttributes,
+                             HttpServletRequest request) throws IOException, ServletException {
+
+        URL url = new URL(request.getHeader("Referer")); //where request is the HttpServletRequest
+        String urlStr = url.getPath();
+//        System.out.println("lru: " + urlStr);
+
+        model = menuService.getMenuItems(model); //get menu items
+
+        String resqMeth = getDelGenre(id);
+
+        if (resqMeth.equals("error")) {
+            redirectAttributes.addFlashAttribute("error", true);
+//            model.addAttribute("error", true);
+        }
+        if (resqMeth.equals("ok")) {
+            System.out.println("ok page delGenreid");
+
+            redirectAttributes.addFlashAttribute("ok", true);
+//            model.addAttribute("ok", true);
+        }
+        String retStr = "redirect:" + urlStr;
+
+        return retStr;
+    }
+
+
+    //если нельзя удалить то посылаем на страницу error
+    public String getDelGenre(String id) {
+        Long idGenre = null;
+        try {
+            idGenre = Long.valueOf(id);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        boolean trExistsOfGame = false;
+
+        if (genresRepository.existsById(Long.valueOf(id))) {
+            List<Products> productsList = productsRepository.findAll();
+
+            for (Products prod : productsList) {
+                if (prod.getGenres().getId().equals(idGenre)) {
+                    trExistsOfGame = true;
+
+                    return "error";
+//                    return "delGenreError";
+                    //перенаправить на стриницу ошибки или передать ошибку на текущую и вывести ошибку вверху
+                }
+            }
+            if (!trExistsOfGame) {
+                genresRepository.deleteById(idGenre);
+                return "ok";
+            }
+        }
+
+        return "ok";
+    }
+
+
+    //Если удаляем платформу, то меняем платформу на другую в игре
+    //наверно нужно переделать, что не можем удалить платформу, если есть игра с такой платформой
     @GetMapping("/delplatform/{id}")
     public String delPlatformId(@PathVariable String id, Model model) {
 
@@ -151,6 +237,73 @@ public class AdminController {
         return "redirect:/listplatforms";
     }
 
+
+    @GetMapping("/delplatform1/{id}")
+    public String delPlatformId1(@PathVariable String id, Model model, RedirectAttributes redirectAttributes,
+                                 HttpServletRequest request) throws MalformedURLException {
+
+        URL url = new URL(request.getHeader("Referer")); //where request is the HttpServletRequest
+        String urlStr = url.getPath();
+        if (urlStr.startsWith("/platform")) {
+            urlStr = "/listplatforms";
+        }
+        System.out.println("lru: " + urlStr);
+
+        model = menuService.getMenuItems(model); //get menu items
+
+        String resqMeth = getDelPlatform(id);
+
+        if (resqMeth.equals("error")) {
+            System.out.println("error page delplatform1");
+
+            redirectAttributes.addFlashAttribute("error", true);
+//            model.addAttribute("error", true);
+        }
+        if (resqMeth.equals("ok")) {
+            System.out.println("ok page delplatform1");
+
+            redirectAttributes.addFlashAttribute("ok", true);
+//            model.addAttribute("ok", true);
+        }
+        String retStr = "redirect:" + urlStr;
+
+        return retStr;
+
+    }
+
+
+    //если нельзя удалить то посылаем на страницу error
+    public String getDelPlatform(String id) {
+        Long idPlatform = null;
+        try {
+            idPlatform = Long.valueOf(id);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        boolean trExistsOfGame = false;
+
+        if (platformsRepository.existsById(Long.valueOf(id))) {
+            List<Products> productsList = productsRepository.findAll();
+
+            for (Products prod : productsList) {
+                if (prod.getGenres().getId().equals(idPlatform)) {
+                    trExistsOfGame = true;
+
+                    return "error";
+                    //перенаправить на стриницу ошибки или передать ошибку на текущую и вывести ошибку вверху
+                }
+            }
+            if (!trExistsOfGame) {
+                platformsRepository.deleteById(idPlatform);
+                return "ok";
+            }
+        }
+
+        return "ok"; //не используется
+    }
+
+
     public Long getLastId(JpaRepository<?, ?> jp, String str) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, InstantiationException {
         //получение последнего id из списка платформ
         List<JpaRepository<?, ?>> productsList = (List<JpaRepository<?, ?>>) jp.findAll();
@@ -161,22 +314,25 @@ public class AdminController {
 
         Long actualCount = -1L;
 
-        logger.info("size: " + siz);
+//        logger.info("size: " + siz);
         if (siz > 0) {
             for (Object obj : productsList) {
+                if (str.equals("com.psu.kurs.demo.entity.FinalOrder")) {
+                    FinalOrder finalOrder = (FinalOrder) obj;
+                    listSize.add(finalOrder.getId());
 
-                Field f = cl.getDeclaredField("id");
-                boolean flag = f.isAccessible();
-                f.setAccessible(true);
+                } else {
+                    Field f = cl.getDeclaredField("id");
+                    boolean flag1 = f.isAccessible();
+                    f.setAccessible(true);
 
-                System.out.println(f.get(obj));
-
-                listSize.add((Long) f.get(obj));
-
-                f.setAccessible(flag);
+                    listSize.add((Long) f.get(obj));
+                    f.setAccessible(flag1);
+                }
             }
 
-            logger.info("collection print: "+listSize);
+//            logger.info("collection print: "+listSize);
+            System.out.println("list sizzeee:" + listSize);
             actualCount = Collections.max(listSize);
             logger.info("___max value in list: " + actualCount);
         } else {
@@ -267,7 +423,7 @@ public class AdminController {
 
                 Long actualCount = getLastId(genresRepository, Genres.class.getCanonicalName());
                 actualCount++;
-                System.out.println("actualCount"+actualCount);
+                System.out.println("actualCount" + actualCount);
 
                 //получение последнего id из списка платформ
                 Images images = getImagesClass(file, actualCount);
