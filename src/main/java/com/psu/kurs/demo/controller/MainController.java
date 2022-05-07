@@ -9,6 +9,8 @@ import com.psu.kurs.demo.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,14 +73,25 @@ public class MainController {
 
     @Autowired
     OtherService otherService;
+//    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println("---auth:"+auth);
+//        if (auth != null){
+//        logger.info("User '" + auth.getName() + "' attempted to access the protected URL: " + httpServletRequest.getRequestURI());
+//    }
+//
+//    boolean isAdmin = httpServletRequest.isUserInRole("ROLE_USER");
+//        System.out.println("http serv__:" + isAdmin);
+//        System.out.println("uuuuser:" +httpServletRequest.getRemoteUser());
+//
+//    AdminController adminController = new AdminController();
+////        System.out.println(Platforms.class.getCanonicalName());
+////      logger.info("_______________size: "+adminController.getLastId(platformsRepository,Platforms.class.getCanonicalName()));
+
+
 
     @GetMapping(value = {"/", "index"})
-    public String index(Model model) throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public String index(Model model, HttpServletRequest httpServletRequest) throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         model = menuService.getMenuItems(model); //get menu items
-
-        AdminController adminController=new AdminController();
-//        System.out.println(Platforms.class.getCanonicalName());
-//      logger.info("_______________size: "+adminController.getLastId(platformsRepository,Platforms.class.getCanonicalName()));
 
         return "index";
     }
@@ -86,7 +99,6 @@ public class MainController {
     @GetMapping("/genres")
     public String genres(Model model) {
         model = menuService.getMenuItems(model); //get menu items
-
         return "genres";
     }
 
@@ -118,7 +130,7 @@ public class MainController {
         List<Products> productsList = productsRepository.findAll();
 
         for (Products prod : productsList) {
-            System.out.println("idP:" + prod.getPlatforms().getId());
+//            System.out.println("idP:" + prod.getPlatforms().getId());
             if (prod.getPlatforms().getId() == Long.valueOf(id)) {
                 newListProduct.add(prod);
             }
@@ -126,7 +138,8 @@ public class MainController {
 
         model = menuService.getMenuItems(model); //get menu items
         model.addAttribute("newListProduct", newListProduct);
-        System.out.println("size prod:" + newListProduct.size());
+        model.addAttribute("yourplatform", platformsRepository.getOne(Long.valueOf(id)).getName());
+//        System.out.println("size prod:" + newListProduct.size());
 
         return "getGameByPlatform";
     }
@@ -137,7 +150,7 @@ public class MainController {
         List<Products> productsList = productsRepository.findAll();
 
         for (Products prod : productsList) {
-            System.out.println("idP:" + prod.getPlatforms().getId());
+//            System.out.println("idP:" + prod.getPlatforms().getId());
             if (prod.getGenres().getId() == Long.valueOf(id)) {
                 newListProduct.add(prod);
             }
@@ -145,7 +158,8 @@ public class MainController {
 
         model = menuService.getMenuItems(model); //get menu items
         model.addAttribute("newListProduct", newListProduct);
-        System.out.println("size prod:" + newListProduct.size());
+        model.addAttribute("yourgenre", genresRepository.getOne(Long.valueOf(id)).getName());
+//        System.out.println("size prod:" + newListProduct.size());
 
         return "getGameByGenre";
     }
