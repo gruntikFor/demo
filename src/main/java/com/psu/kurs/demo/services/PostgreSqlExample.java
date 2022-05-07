@@ -21,7 +21,7 @@ public class PostgreSqlExample {
 
     private PostgreSqlExample() {
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/kurss", "postgres", "gruntik");
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/kurss", "postgres", "gruntik99");
             statement = connection.createStatement();
         }  catch (SQLException e) {
             System.out.println("Connection failure.");
@@ -64,7 +64,7 @@ public class PostgreSqlExample {
     public void reconnect(String database) throws SQLException {
         statement.close();
         connection.close();
-        connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/"+database, "postgres", "gruntik");
+        connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/"+database, "postgres", "gruntik99");
         statement = connection.createStatement();
     }
 
