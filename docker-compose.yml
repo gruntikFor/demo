@@ -1,0 +1,46 @@
+version: "3.4"
+services:
+  postgresqldb:
+    image: postgres
+    container_name: postgres_container
+    environment:
+      POSTGRES_DB: "kurss"
+      POSTGRES_SHEMA: "cursovaya"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "gruntik99"
+    volumes:
+      - .:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+  app:
+    image: app.jar
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresqldb
+##    links:
+##      - "db:database"
+
+#version: '3.1'
+#services:
+#  postgresqldb:
+#    image: postgres
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      POSTGRES_DB: "kurss"
+##      POSTGRES_SHEMA: "cursovaya"
+#      POSTGRES_USER: "postgres"
+#      POSTGRES_PASSWORD: "gruntik99"
+#      volumes:
+#        -.:/docker-entrypoint-initdb.d
+##  app:
+###    container_name: springboot-postgresql
+##    image: app.jar
+##    build: ./
+##    ports:
+##      - "8080:8080"
+##    depends_on:
+##      - postgresqldb
+
+
