@@ -55,20 +55,21 @@ public class Initializer implements ApplicationListener<ApplicationReadyEvent> {
             User user = new User();
             user.setUsername("admin");
             user.setPassword("1234");
+            user.setDiscount_rate(1.0);
             user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_ADMIN")));
             userService.save(user);
             user = new User();
             user.setUsername("user");
             user.setPassword("1234");
+            user.setDiscount_rate(1.0);
             userService.save(user);
 
             User user0 = new User();
             user0.setUsername("courier");
             user0.setPassword("1234");
+            user0.setDiscount_rate(1.0);
             user0.setRoles(Arrays.asList(roleRepository.findByName("ROLE_COURIER")));
             userService.save(user0);
-
-
 
         }
     }
